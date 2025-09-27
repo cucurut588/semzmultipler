@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SemzMultiplerText - Generator Teks Gandakan</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --success: #00b894;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .counter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            background: #5a4fd4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-copy {
+            background: var(--success);
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .btn-copy:hover {
+            background: #00a085;
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transform: translateX(150%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SemzMultiplerText</h1>
+            <p class="tagline">Generator Teks Gandakan - Gandakan kata atau kalimat dengan mudah!</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-group">
+                <label for="text-input">Masukkan Kata atau Kalimat:</label>
+                <textarea id="text-input" placeholder="Masukkan kata atau kalimat yang ingin digandakan..."></textarea>
+                <div class="counter">
+                    <span>Jumlah karakter: <span id="char-count">0</span></span>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="multiplier">Jumlah Penggandaan (minimal 1,000):</label>
+                <input type="number" id="multiplier" min="1000" value="1000">
+            </div>
+            
+            <button id="generate-btn" class="btn">
+                <i>🔄</i> Hasilkan Teks
+            </button>
+            
+            <div class="result-container">
+                <div class="result-header">
+                    <span class="result-title">Hasil Teks yang Digandakan:</span>
+                </div>
+                <textarea id="result-text" readonly placeholder="Hasil teks yang digandakan akan muncul di sini..."></textarea>
+                <div class="counter">
+                    <span>Jumlah karakter: <span id="result-char-count">0</span></span>
+                    <span>Jumlah baris: <span id="result-line-count">0</span></span>
+                </div>
+                <button id="copy-btn" class="btn btn-copy">
+                    <i>📋</i> Salin Teks
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        Teks berhasil disalin!
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('text-input');
+            const multiplierInput = document.getElementById('multiplier');
+            const generateBtn = document.getElementById('generate-btn');
+            const resultText = document.getElementById('result-text');
+            const copyBtn = document.getElementById('copy-btn');
+            const charCount = document.getElementById('char-count');
+            const resultCharCount = document.getElementById('result-char-count');
+            const resultLineCount = document.getElementById('result-line-count');
+            const notification = document.getElementById('notification');
+            
+            // Update karakter count untuk input teks
+            textInput.addEventListener('input', function() {
+                charCount.textContent = textInput.value.length;
+            });
+            
+            // Generate teks yang digandakan
+            generateBtn.addEventListener('click', function() {
+                const text = textInput.value.trim();
+                const multiplier = parseInt(multiplierInput.value);
+                
+                if (!text) {
+                    alert('Masukkan teks terlebih dahulu!');
+                    textInput.focus();
+                    return;
+                }
+                
+                if (multiplier < 1000) {
+                    alert('Jumlah penggandaan minimal 1,000!');
+                    multiplierInput.focus();
+                    return;
+                }
+                
+                // Generate teks yang digandakan per baris
+                let result = '';
+                for (let i = 0; i < multiplier; i++) {
+                    result += text + '\n';
+                }
+                
+                resultText.value = result;
+                
+                // Update counters
+                resultCharCount.textContent = result.length;
+                resultLineCount.textContent = multiplier;
+            });
+            
+            // Salin teks ke clipboard
+            copyBtn.addEventListener('click', function() {
+                if (!resultText.value) {
+                    alert('Tidak ada teks untuk disalin!');
+                    return;
+                }
+                
+                resultText.select();
+                document.execCommand('copy');
+                
+                // Tampilkan notifikasi
+                notification.classList.add('show');
+                setTimeout(function() {
+                    notification.classList.remove('show');
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
